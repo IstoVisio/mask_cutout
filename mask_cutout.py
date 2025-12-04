@@ -3,15 +3,11 @@ from tifffile import imread, imwrite
 import numpy as np
 import shutil
 
-# Configure these three fields to match the directories containing the outputs from syGlass
+# Configure these three fields to match the directories containin the outputs from syGlass
 # and the directory where you'd like the result images to be written
 IMAGE_DIR = r'C:\Users\natha\Downloads\88-0412-OG_647_ROI-2\Image'
 MASK_DIR = r'C:\Users\natha\Downloads\88-0412-OG_647_ROI-2\Mask'
 RESULTS_DIR = r'C:\Users\natha\Downloads\mask_labels_results'
-
-# When "True", we'll use the actual image data in each cutout. When "False", we'll just use 1
-# instead, creating a binary mask.
-CUT_OUT_IMAGE_DATA = True
 
 # Ensure that results directory exists
 if not os.path.exists(RESULTS_DIR):
@@ -36,7 +32,7 @@ for mask_id in mask_ids:
     for i in range(0, len(mask_paths)):
         image = imread(f"{IMAGE_DIR}/{image_paths[i]}")
         mask = imread(f"{MASK_DIR}/{mask_paths[i]}")
-        result = np.where(mask == mask_id, image if CUT_OUT_IMAGE_DATA else 1, 0).astype(image.dtype)
+        result = np.where(mask == mask_id, image, 0).astype(image.dtype)
         result_path = f"{mask_dir}/{image_paths[i][:-5]}_Mask-{mask_id}.tiff"
         imwrite(result_path, result, compression = 'zlib')
     print(f"Created TIFF stack for mask ID {mask_id}")
